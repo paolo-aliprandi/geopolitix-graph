@@ -1,0 +1,42 @@
+export const g20Countries = [
+  { id: "USA", name: "United States" },
+  { id: "CHN", name: "China" },
+  { id: "RUS", name: "Russia" },
+  { id: "IND", name: "India" },
+  { id: "BRA", name: "Brazil" },
+  { id: "ZAF", name: "South Africa" },
+  { id: "DEU", name: "Germany" },
+  { id: "FRA", name: "France" },
+  { id: "GBR", name: "United Kingdom" },
+  { id: "JPN", name: "Japan" },
+  { id: "KOR", name: "South Korea" },
+  { id: "AUS", name: "Australia" },
+  { id: "ITA", name: "Italy" },
+  { id: "CAN", name: "Canada" },
+  { id: "MEX", name: "Mexico" },
+  { id: "SAU", name: "Saudi Arabia" },
+  { id: "TUR", name: "Turkey" },
+  { id: "IDN", name: "Indonesia" },
+  { id: "ARG", name: "Argentina" },
+  { id: "EU",  name: "European Union" }
+];
+
+export const g20Links = [
+  { source: "USA", target: "DEU", type: "strategic", score: 0.8 },
+  { source: "USA", target: "JPN", type: "strategic", score: 0.9 },
+  { source: "USA", target: "KOR", type: "strategic", score: 0.8 },
+  { source: "USA", target: "CHN", type: "commercial", score: 0.3 },
+  { source: "USA", target: "RUS", type: "sanction", score: -0.9 },
+  { source: "CHN", target: "RUS", type: "strategic", score: 0.7 },
+  { source: "CHN", target: "IND", type: "conflict", score: -0.4 },
+  { source: "CHN", target: "BRA", type: "commercial", score: 0.7 },
+  { source: "IND", target: "USA", type: "strategic", score: 0.6 },
+  { source: "BRA", target: "RUS", type: "strategic", score: 0.4 },
+  { source: "ZAF", target: "CHN", type: "commercial", score: 0.6 },
+  { source: "EU",  target: "RUS", type: "sanction", score: -0.8 },
+  { source: "EU",  target: "USA", type: "strategic", score: 0.9 },
+  { source: "EU",  target: "CHN", type: "commercial", score: 0.4 },
+  { source: "TUR", target: "RUS", type: "strategic", score: 0.3 },
+  { source: "SAU", target: "USA", type: "strategic", score: 0.5 },
+  { source: "SAU", target: "CHN", type: "commercial", score: 0.6 }
+];

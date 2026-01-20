@@ -1,0 +1,26 @@
+{
+  "nodes": [
+    { "id": "India" },
+    { "id": "Pakistan" },
+    { "id": "Russia" },
+    { "id": "Ukraine" }
+  ],
+  "links": [
+    {
+      "source": "India",
+      "target": "Pakistan",
+      "type": "conflict",
+      "score": -0.9,
+      "note": "May 2025 Operation Sindoor strikes, border conflict",
+      "sources": ["https://en.wikipedia.org/wiki/2025_India%E2%80%93Pakistan_conflict"]
+    },
+    {
+      "source": "Russia",
+      "target": "Ukraine",
+      "type": "conflict",
+      "score": -1.0,
+      "note": "Ongoing conflict since 2022",
+      "sources": ["https://www.cfr.org/global-conflict-tracker/conflict/conflict-ukraine"]
+    }
+  ]
+}

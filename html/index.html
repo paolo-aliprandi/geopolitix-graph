@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GeopolitixGraph — Modular Data</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body { margin:0; font-family: sans-serif; overflow:hidden; }
+    header { padding: 10px; background: #f3f4f6; display:flex; align-items:center; }
+    #wrap { display:flex; }
+    svg { flex:1; border:1px solid #ccc; }
+    #panel { width: 300px; padding: 10px; border-left:1px solid #ccc; overflow:auto; }
+    .label { font-size: 12px; pointer-events:none; }
+  </style>
+</head>
+<body>
+<header>
+  <h1 style="flex:1;">GeopolitixGraph — Modular Prototype</h1>
+  <div id="controls">
+    <label for="relation">Show:</label>
+    <select id="relation">
+      <option value="geographic">Geographic (borders)</option>
+      <option value="commercial">Commercial</option>
+      <option value="conflict">Conflict / military</option>
+      <option value="diplomatic">Diplomatic</option>
+    </select>
+    <button id="reset">Reset layout</button>
+  </div>
+</header>
+
+<div id="wrap">
+  <svg id="graph"></svg>
+  <aside id="panel">
+    <h3>Detail</h3>
+    <div id="info">Select a link to see details.</div>
+  </aside>
+</div>
+
+<script>
+const svg = d3.select("#graph");
+const panel = d3.select("#info");
+const width = document.body.clientWidth - 300;
+const height = window.innerHeight - 60;
+svg.attr("width", width).attr("height", height);
+
+// Create zoomable container
+const g = svg.append("g");
+
+// Zoom and pan behavior
+svg.call(d3.zoom()
+  .scaleExtent([0.1, 5])
+  .on("zoom", (event) => g.attr("transform", event.transform))
+);
+
+const sim = d3.forceSimulation()
+  .force("link", d3.forceLink().id(d => d.id).distance(120).strength(0.8))
+  .force("charge", d3.forceManyBody().strength(-100))
+  .force("center", d3.forceCenter(width / 2, height / 2))
+  .force("collide", d3.forceCollide(20));
+
+let nodeGroup = g.append("g").attr("class", "nodes");
+let linkGroup = g.append("g").attr("class", "links");
+let labelGroup = g.append("g").attr("class", "labels");
+let currentData = null;
+
+const colorMap = {
+  geographic: "#6b7280",
+  commercial: "#059669",
+  conflict: "#dc2626",
+  diplomatic: "#2563eb"
+};
+
+function draw(data, type) {
+  currentData = data;
+  linkGroup.selectAll("*").remove();
+  nodeGroup.selectAll("*").remove();
+  labelGroup.selectAll("*").remove();
+
+  const links = data.links;
+  const nodes = data.nodes;
+
+  $('#info').html('Select a link to see details.');
+
+  // Links
+  const link = linkGroup.selectAll("line")
+  .data(links)
+  .join("line")
+  .attr("stroke", d => colorMap[type] || "#888")
+  .attr("stroke-width", d => d.type === 'conflict' ? 4 : 2)
+  .attr("stroke-dasharray", d => d.type === 'conflict' ? "4,2" : null)
+  .on("click", (event, d) => {
+    let info = `<strong>${d.source.id} ↔ ${d.target.id}</strong><div>Type: ${type}</div>`;
+    if (d.note) info += `<div>Note: ${d.note}</div>`;
+    $('#info').html(info); // or panel.html(info) if you prefer D3
+  });
+
+
+  // Nodes
+  const n = nodeGroup.selectAll("g")
+    .data(nodes, d => d.id)
+    .join(enter => {
+      const gNode = enter.append("g");
+      gNode.append("circle").attr("r", 12).attr("fill", "#60a5fa");
+      gNode.append("title").text(d => d.id);
+      return gNode;
+    }).call(drag(sim));
+
+  // Labels
+  labelGroup.selectAll("text")
+    .data(nodes, d => d.id)
+    .join("text")
+    .attr("class", "label")
+    .text(d => d.id);
+
+  sim.nodes(nodes);
+  sim.force("link").links(links);
+  sim.alpha(0.5).restart();
+
+  sim.on("tick", () => {
+    link
+      .attr("x1", d => d.source.x).attr("y1", d => d.source.y)
+      .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+
+    n.attr("transform", d => `translate(${d.x},${d.y})`);
+    labelGroup.selectAll("text")
+      .attr("x", d => d.x + 14)
+      .attr("y", d => d.y + 4);
+  });
+}
+
+async function loadAndDraw(type) {
+  const data = await d3.json(`data/${type}.json`);
+  draw(data, type);
+}
+
+document.getElementById("relation").addEventListener("change", (e) => {
+  loadAndDraw(e.target.value);
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  if (!currentData) return;
+  currentData.nodes.forEach(n => { delete n.x; delete n.y; delete n.vx; delete n.vy; });
+  sim.alpha(0.5).restart();
+});
+
+function drag(sim) {
+  function start(event, d) { if (!event.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; }
+  function dragged(event, d) { d.fx = event.x; d.fy = event.y; }
+  function end(event, d) { if (!event.active) sim.alphaTarget(0); d.fx = null; d.fy = null; }
+  return d3.drag().on("start", start).on("drag", dragged).on("end", end);
+}
+
+// Initial load
+loadAndDraw(document.getElementById("relation").value);
+</script>
+</body>
+</html>

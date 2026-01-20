@@ -1,0 +1,40 @@
+{
+  "nodes": [
+    { "id": "USA" },
+    { "id": "Germany" },
+    { "id": "Japan" },
+    { "id": "South Korea" },
+    { "id": "Turkey" },
+    { "id": "Russia" }
+  ],
+  "links": [
+    {
+      "source": "USA",
+      "target": "Germany",
+      "type": "diplomatic",
+      "score": 0.8,
+      "note": "Strong NATO / strategic alliance"
+    },
+    {
+      "source": "USA",
+      "target": "Japan",
+      "type": "diplomatic",
+      "score": 0.9,
+      "note": "Security partnership"
+    },
+    {
+      "source": "USA",
+      "target": "South Korea",
+      "type": "diplomatic",
+      "score": 0.85,
+      "note": "Security partnership"
+    },
+    {
+      "source": "Turkey",
+      "target": "Russia",
+      "type": "diplomatic",
+      "score": 0.3,
+      "note": "Complex ties (cooperation + competition)"
+    }
+  ]
+}

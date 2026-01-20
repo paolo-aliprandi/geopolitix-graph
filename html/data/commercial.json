@@ -1,0 +1,34 @@
+{
+  "nodes": [
+    { "id": "USA" },
+    { "id": "China" },
+    { "id": "Germany" },
+    { "id": "France" },
+    { "id": "China" },
+    { "id": "Brazil" }
+  ],
+  "links": [
+    {
+      "source": "USA",
+      "target": "China",
+      "type": "commercial",
+      "score": 0.5,
+      "note": "Strong bilateral trade; 2025 tariff pause",
+      "sources": ["https://www.reuters.com/world/china/chinas-top-trade-negotiator-head-us-talks-wsj-reports-2025-08-26/"]
+    },
+    {
+      "source": "China",
+      "target": "Brazil",
+      "type": "commercial",
+      "score": 0.7,
+      "note": "Major China-Brazil trade partnership"
+    },
+    {
+      "source": "Germany",
+      "target": "France",
+      "type": "commercial",
+      "score": 0.8,
+      "note": "Deep intra-EU trade"
+    }
+  ]
+}
