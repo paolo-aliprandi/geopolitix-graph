@@ -50,7 +50,8 @@ function GraphApp() {
     const params = new URLSearchParams();
     params.set("type", relationType);
     if (selectedCountry) params.set("country", selectedCountry);
-    router.replace(`/?${params.toString()}`, { scroll: false });
+    const basePath = process.env.__NEXT_ROUTER_BASEPATH || "";
+    router.replace(`${basePath}/?${params.toString()}`, { scroll: false });
   }, [relationType, selectedCountry, router, isReady]);
 
   // Derived data
