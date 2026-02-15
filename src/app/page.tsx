@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { europeCountries, europeLinks } from "@/data/europe";
 import type { RelationType } from "@/lib/types";
@@ -18,7 +18,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
 
 function GraphApp() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [relationType, setRelationType] = useState<RelationType>("geographic");
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
@@ -50,9 +49,9 @@ function GraphApp() {
     const params = new URLSearchParams();
     params.set("type", relationType);
     if (selectedCountry) params.set("country", selectedCountry);
-    const basePath = process.env.__NEXT_ROUTER_BASEPATH || "";
-    router.replace(`${basePath}/?${params.toString()}`, { scroll: false });
-  }, [relationType, selectedCountry, router, isReady]);
+    const url = `${window.location.pathname}?${params.toString()}`;
+    window.history.replaceState(null, "", url);
+  }, [relationType, selectedCountry, isReady]);
 
   // Derived data
   const filteredLinks = useFilteredLinks(
